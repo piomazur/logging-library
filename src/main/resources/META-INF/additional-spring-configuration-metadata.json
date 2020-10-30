@@ -1,9 +1,4 @@
 {
   "properties": [
-    {
-      "name": "azimo.spring.web.exception-handling-filter.enabled",
-      "defaultValue": false,
-      "description": "If enabled, exceptions will be handled by the ExceptionHandlingFilter."
-    }
   ]
 }

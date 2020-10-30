@@ -1,4 +1,4 @@
-package com.azimo.tukan;
+package com.azimo.tukan.logging;
 
 import com.azimo.tukan.logging.micrometer.EnableAzimoLoggingConfiguration;
 import com.azimo.tukan.logging.micrometer.FragileInner;
