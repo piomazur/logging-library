@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
 @Data
@@ -19,6 +20,11 @@ public class FragileInner {
 
     private String exposableOne;
     private String exposableTwo;
+
+    @SanitizedToString
+    public void someMethod() {
+        System.out.println("someMethod");
+    }
 
     @Override
     public String toString() {
