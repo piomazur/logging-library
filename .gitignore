@@ -1,25 +1,10 @@
-# Operating System Files
-
-*.DS_Store
-Thumbs.db
-*~
-.#*
-#*
-*#
-
-# Build Files #
-
-bin
-target/
-build/
-.gradle
-out
-# IntelliJ IDEA Files #
-
+/.gradle/
+/bin/
+/build/
+/.settings/
+/.classpath
+/.project
+/.idea/
 *.iml
-*.ipr
 *.iws
-*.idea
-
-# Logs #
-logs
+out
