@@ -1,0 +1,114 @@
+plugins {
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.datlowe.maven-publish-auth' version '2.0.2'
+    id 'net.researchgate.release' version '2.8.1'
+    id 'java'
+    id 'maven-publish'
+    id 'com.adarshr.test-logger' version '2.0.0'
+    id 'groovy'
+}
+
+test {
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+}
+
+testlogger {
+    theme 'standard-parallel'
+    showExceptions true
+    slowThreshold 2000
+    showSummary true
+    showPassed true
+    showSkipped true
+    showFailed true
+    showStandardStreams true
+    showPassedStandardStreams true
+    showSkippedStandardStreams true
+    showFailedStandardStreams true
+}
+
+group = 'com.azimo.tukan'
+sourceCompatibility = 11
+targetCompatibility = 11
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR8'
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:2.2.9.RELEASE'
+    }
+}
+
+ext {
+    baseName = 'logging-library'
+    logstashVersion = '4.11'
+    mockitoVersion = '2.12.0'
+    assertJVersion = '3.8.0'
+    jsr305Version = '3.0.2'
+    wiremockVersion = '2.26.3'
+    lombokVersion = '1.18.8'
+}
+
+jar {
+    manifest { attributes("Implementation-Vendor": "Azimo") }
+    manifest { attributes("Implementation-Version": archiveVersion) }
+}
+
+repositories {
+    mavenLocal()
+    maven { url "https://nexus.azimo.com/repository/maven-central/" }
+    maven { url "https://nexus.azimo.com/repository/maven-releases/" }
+    maven { url "https://nexus.azimo.com/repository/io.confluent/" }
+    maven { url "https://nexus.azimo.com/repository/apache.snapshots/" }
+}
+
+dependencies {
+    /** Spring **/
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    compile "org.springframework.boot:spring-boot-starter"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-aop"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "com.google.code.findbugs:jsr305:${jsr305Version}"
+
+    compile "io.micrometer:micrometer-core"
+    compile "io.micrometer:micrometer-registry-prometheus"
+
+    /** lombok **/
+    compile "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    /** Logging **/
+    compile "net.logstash.logback:logstash-logback-encoder:${logstashVersion}"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "com.github.tomakehurst:wiremock-jre8:${wiremockVersion}"
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: "${assertJVersion}"
+}
+
+compileJava.dependsOn(processResources)
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = project.name
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            name = "nexus.azimo.com"
+            url "https://nexus.azimo.com/repository/maven-${project.version.endsWith('-SNAPSHOT') ? 'snapshots' : 'releases' }/"
+        }
+    }
+}
+
+afterReleaseBuild.dependsOn publish

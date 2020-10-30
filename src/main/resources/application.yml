@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: logging-library
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,env,loggers,metrics,prometheus,mappings
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
