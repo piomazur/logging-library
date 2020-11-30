@@ -1,15 +1,16 @@
 package com.azimo.tukan.logging.micrometer;
 
+import com.azimo.pio.sanitizer.core.counter.Sanitize;
+import com.azimo.pio.sanitizer.core.counter.Sanitized;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
 @Data
 @Builder
-@SanitizedToString
+@Sanitized
+@AllArgsConstructor
 public class FragileInner {
 
     @JsonProperty
@@ -20,19 +21,7 @@ public class FragileInner {
 
     private String exposableOne;
     private String exposableTwo;
-
-    @SanitizedToString
-    public void someMethod() {
-        System.out.println("someMethod");
-    }
-
-    @Override
-    public String toString() {
-        return "FragileInner{" +
-                "fragileOne='" + fragileOne + '\'' +
-                ", fragileTwo='" + fragileTwo + '\'' +
-                ", exposableOne='" + exposableOne + '\'' +
-                ", exposableTwo='" + exposableTwo + '\'' +
-                '}';
-    }
 }
+
+
+

@@ -2,7 +2,6 @@ package com.azimo.tukan.logging;
 
 import com.azimo.tukan.logging.micrometer.EnableAzimoLoggingConfiguration;
 import com.azimo.tukan.logging.micrometer.FragileInner;
-import com.azimo.tukan.logging.micrometer.SanitizeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
@@ -20,6 +19,10 @@ public class Application {
 
     public static void main(String[] args) {
         new SpringApplicationBuilder().bannerMode(Banner.Mode.OFF).sources(Application.class).run(args);
+
+        FragileInner fragile = new FragileInner("password", "token", "something", "something2");
+
+        System.out.println(fragile.toString());
     }
 
     @Bean
@@ -28,20 +31,13 @@ public class Application {
             String simpleKeyValue = "123";
             log.error("Simple key value {}", keyValue("simpleKeyValue", simpleKeyValue));
 
-            FragileInner fragile = sanitizeService().sanitize();
+            FragileInner fragile = new FragileInner("password", "token", "something", "something2");
 
             System.out.println(fragile);
 
             log.error("Complex with fragile info {}", kv("fragile", fragile));
 
             log.error("Fragile: {}", fragile.toString());
-
-            fragile.someMethod();
         };
-    }
-
-    @Bean
-    public SanitizeService sanitizeService() {
-        return new SanitizeService();
     }
 }

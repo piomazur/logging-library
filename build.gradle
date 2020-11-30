@@ -7,6 +7,17 @@ plugins {
     id 'com.adarshr.test-logger' version '2.0.0'
 }
 
+ext {
+    baseName = 'logging-library'
+    logstashVersion = '4.11'
+    mockitoVersion = '2.12.0'
+    assertJVersion = '3.8.0'
+    jsr305Version = '3.0.2'
+    wiremockVersion = '2.26.3'
+    lombokVersion = '1.18.8'
+    aspectjVersion = '1.9.2'
+}
+
 test {
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 }
@@ -30,6 +41,11 @@ sourceCompatibility = 11
 targetCompatibility = 11
 
 configurations {
+    ajc
+    aspects
+    compile {
+        extendsFrom aspects
+    }
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -40,16 +56,6 @@ dependencyManagement {
         mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Hoxton.SR8'
         mavenBom 'org.springframework.boot:spring-boot-dependencies:2.2.9.RELEASE'
     }
-}
-
-ext {
-    baseName = 'logging-library'
-    logstashVersion = '4.11'
-    mockitoVersion = '2.12.0'
-    assertJVersion = '3.8.0'
-    jsr305Version = '3.0.2'
-    wiremockVersion = '2.26.3'
-    lombokVersion = '1.18.8'
 }
 
 jar {
@@ -68,11 +74,18 @@ repositories {
 dependencies {
     /** Spring **/
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.springframework.boot:spring-boot-starter"
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-aop"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "com.google.code.findbugs:jsr305:${jsr305Version}"
+
+    ajc "org.aspectj:aspectjtools:1.9.2"
+
+    implementation "com.azimo.pio:sanitize-object-core:0.0.1-SNAPSHOT"
+    aspects "com.azimo.pio:sanitize-object-core:0.0.1-SNAPSHOT"
 
     compile "io.micrometer:micrometer-core"
     compile "io.micrometer:micrometer-registry-prometheus"
@@ -89,7 +102,40 @@ dependencies {
     testImplementation group: 'org.assertj', name: 'assertj-core', version: "${assertJVersion}"
 }
 
-compileJava.dependsOn(processResources)
+def aspectj = { destDir, aspectPath, inpath, classpath ->
+    ant.taskdef(resource: "org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties",
+            classpath: configurations.ajc.asPath)
+
+    ant.iajc(
+            maxmem: "1024m", fork: "true", Xlint: "ignore",
+            destDir: destDir,
+            aspectPath: aspectPath,
+            inpath: inpath,
+            classpath: classpath,
+            source: project.sourceCompatibility,
+            target: project.targetCompatibility
+    )
+}
+
+compileJava {
+    doLast {
+        aspectj project.sourceSets.main.output.classesDirs.files[0],
+                configurations.aspects.asPath,
+                project.sourceSets.main.output.classesDirs.files[0],
+                project.sourceSets.main.runtimeClasspath.asPath
+    }
+}
+
+compileTestJava {
+    dependsOn jar
+
+    doLast {
+        aspectj project.sourceSets.test.output.classesDirs.files[0],
+                configurations.aspects.asPath + jar.path,
+                project.sourceSets.test.output.classesDirs.files[0],
+                project.sourceSets.test.runtimeClasspath.asPath
+    }
+}
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava
