@@ -1,6 +1,6 @@
 package com.azimo.tukan.logging.micrometer;
 
-import com.azimo.pio.sanitizer.core.counter.SanitizeAspect;
+import com.azimo.pio.sanitizer.core.SanitizeAspect;
 import org.aspectj.lang.Aspects;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

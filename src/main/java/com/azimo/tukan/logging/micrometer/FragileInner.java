@@ -1,7 +1,7 @@
 package com.azimo.tukan.logging.micrometer;
 
-import com.azimo.pio.sanitizer.core.counter.Sanitize;
-import com.azimo.pio.sanitizer.core.counter.Sanitized;
+import com.azimo.pio.sanitizer.core.Sanitize;
+import com.azimo.pio.sanitizer.core.Sanitized;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
