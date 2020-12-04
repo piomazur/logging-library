@@ -15,7 +15,7 @@ ext {
     jsr305Version = '3.0.2'
     wiremockVersion = '2.26.3'
     lombokVersion = '1.18.8'
-    aspectjVersion = '1.9.2'
+    aspectjVersion = '1.9.6'
 }
 
 test {
@@ -82,7 +82,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "com.google.code.findbugs:jsr305:${jsr305Version}"
 
-    ajc "org.aspectj:aspectjtools:1.9.2"
+    ajc "org.aspectj:aspectjtools:1.9.6"
 
     implementation "com.azimo.pio:sanitize-object-core:0.0.1-SNAPSHOT"
     aspects "com.azimo.pio:sanitize-object-core:0.0.1-SNAPSHOT"

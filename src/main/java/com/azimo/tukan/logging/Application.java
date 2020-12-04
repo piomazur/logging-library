@@ -1,7 +1,7 @@
 package com.azimo.tukan.logging;
 
-import com.azimo.tukan.logging.micrometer.EnableAzimoLoggingConfiguration;
-import com.azimo.tukan.logging.micrometer.FragileInner;
+import com.azimo.tukan.logging.example.FragileInner;
+import com.azimo.tukan.logging.sanitizer.EnableAzimoLoggingSanitizerConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
@@ -14,7 +14,7 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 
 @Slf4j
 @SpringBootApplication
-@EnableAzimoLoggingConfiguration
+@EnableAzimoLoggingSanitizerConfiguration
 public class Application {
 
     public static void main(String[] args) {
