@@ -1,17 +1,31 @@
 <configuration>
   <springProfile name="default">
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
-      <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-    </appender>
-  </springProfile>
 
-  <springProfile name="prod">
-    <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
-      <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        <provider class="net.logstash.logback.composite.loggingevent.ArgumentsJsonProvider"/>
+      </encoder>
     </appender>
-    <root level="INFO">
-      <appender-ref ref="jsonConsoleAppender"/>
+
+    <appender name="json" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+        <providers>
+          <provider class="net.logstash.logback.composite.loggingevent.ArgumentsJsonProvider"/>
+        </providers>
+      </encoder>
+      <file>./logs/result.json</file>
+      <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>result.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+        <maxFileSize>100MB</maxFileSize>
+        <maxHistory>5</maxHistory>
+        <totalSizeCap>1GB</totalSizeCap>
+      </rollingPolicy>
+    </appender>
+
+    <root level="WARN">
+      <appender-ref ref="console" />
+      <appender-ref ref="json" />
     </root>
   </springProfile>
 </configuration>
