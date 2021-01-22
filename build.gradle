@@ -1,34 +1,12 @@
 plugins {
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-    id 'org.datlowe.maven-publish-auth' version '2.0.2'
-    id 'net.researchgate.release' version '2.8.1'
     id 'java'
-    id 'maven-publish'
-    id 'com.adarshr.test-logger' version '2.0.0'
 }
 
 ext {
     baseName = 'logging-library'
     logstashVersion = '4.11'
     lombokVersion = '1.18.8'
-}
-
-test {
-    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-}
-
-testlogger {
-    theme 'standard-parallel'
-    showExceptions true
-    slowThreshold 2000
-    showSummary true
-    showPassed true
-    showSkipped true
-    showFailed true
-    showStandardStreams true
-    showPassedStandardStreams true
-    showSkippedStandardStreams true
-    showFailedStandardStreams true
 }
 
 group = 'com.azimo.tukan'
@@ -64,10 +42,6 @@ repositories {
 dependencies {
     /** Spring **/
     compile "org.springframework.boot:spring-boot-starter"
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-
-    compile "io.micrometer:micrometer-core"
-    compile "io.micrometer:micrometer-registry-prometheus"
 
     /** lombok **/
     compile "org.projectlombok:lombok:${lombokVersion}"
@@ -76,20 +50,3 @@ dependencies {
     /** Logging **/
     compile "net.logstash.logback:logstash-logback-encoder:${logstashVersion}"
 }
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = project.name
-            artifact jar
-        }
-    }
-    repositories {
-        maven {
-            name = "nexus.azimo.com"
-            url "https://nexus.azimo.com/repository/maven-${project.version.endsWith('-SNAPSHOT') ? 'snapshots' : 'releases' }/"
-        }
-    }
-}
-
-afterReleaseBuild.dependsOn publish
