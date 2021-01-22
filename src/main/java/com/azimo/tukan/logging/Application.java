@@ -1,13 +1,12 @@
 package com.azimo.tukan.logging;
 
+import com.azimo.tukan.log.sanitizer.EnableAzimoLoggingSanitizerConfiguration;
 import com.azimo.tukan.log.structure.AzimoLogger;
 import com.azimo.tukan.log.structure.AzimoLoggerFactory;
 import com.azimo.tukan.log.structure.model.HttpRequest;
 import com.azimo.tukan.log.structure.model.ProcessDetails;
 import com.azimo.tukan.logging.example.ComplexObjectOne;
 import com.azimo.tukan.logging.example.ComplexObjectTwo;
-import com.azimo.tukan.log.sanitizer.EnableAzimoLoggingSanitizerConfiguration;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +15,8 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.List;
 
-import static net.logstash.logback.argument.StructuredArguments.*;
+import static net.logstash.logback.argument.StructuredArguments.f;
+import static net.logstash.logback.argument.StructuredArguments.kv;
 
 @SpringBootApplication
 @EnableAzimoLoggingSanitizerConfiguration
