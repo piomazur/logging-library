@@ -111,13 +111,4 @@ compileJava {
         }
     }
 }
-compileTestJava {
-    ajc {
-        enabled = true
-        classpath.setFrom configurations.aspectj
-        options {
-            aspectpath.setFrom configurations.aspect
-            compilerArgs = []
-        }
-    }
-}
+
